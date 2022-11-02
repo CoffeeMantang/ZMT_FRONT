@@ -1,0 +1,51 @@
+.nav-item {
+    color: black;
+    
+  }
+  
+  /* 하단 네비바의 메뉴를 눌렀을 때 색상 변경*/
+  .active {
+    color: #F2620F;
+  }
+
+  .menu {
+    color: #F2620F;
+  }
+  button{
+    border:none;
+    /*border-radius:4px 가능 */
+  }
+  button:active {
+    outline: none;
+    box-shadow: none;
+  }
+  .modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  .modal.modalIsOpen {
+    display: flex;
+    align-items: center;
+    /* 팝업이 열릴때 스르륵 열리는 효과 */
+    animation: modal-bg-show 0.3s;
+  }
+
+/*
+ */
+.menuList{
+  width: 18vw;
+  height: 10vh;
+  margin-right: -4vw;
+  margin-top: -3vh;
+}
+.menuSpace{
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  margin-right: 4vw;
+}

@@ -10,6 +10,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/" element={<Main />} />
         <Route path="/main" element={<Main />} />
         <Route path="/search" element={<Search />} />
         <Route path="/menulist" element={<Menulist />} />
