@@ -1,7 +1,8 @@
-import { Box } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Box } from "@mui/system";
 import React from "react";
 
-function Address(props) {
+export default function Signinpage() {
   return (
     <Box
       sx={{
@@ -13,8 +14,11 @@ function Address(props) {
         overflow: "hidden",
       }}
     >
-      <h6>22</h6>
+      <Box>
+        <h1>sssssssss</h1>
+      </Box>
+
+      <Paper></Paper>
     </Box>
   );
 }
-export default Address;
