@@ -1,0 +1,39 @@
+nav {
+    display: flex;
+    overflow-x: scroll;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid #eeeeee;
+    .inactive,
+    .active {
+      display: inline-block;
+      position: relative;
+      flex-wrap: nowrap;
+      align-items: center;
+      z-index: 1;
+      color: black;
+      span:after {
+        content: "";
+        position: absolute;
+        height: 2px;
+        left: 0;
+        right: 0;
+        bottom: -16px;
+        transform: scaleX(0);
+      }
+    }
+  
+    .active {
+      color: #4285f4;
+      span {
+        position: relative;
+        &:after {
+          background-color: #4285f4;
+          transform-origin: center;
+          transition: 500ms;
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+  

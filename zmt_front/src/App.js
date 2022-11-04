@@ -7,6 +7,7 @@ import Mypage from "./pages/Mypage";
 import Orderlist from "./pages/Orderlist";
 import Signinpage from "./pages/Signinpage";
 import BottomNav from "./bottomNav/BottomNav";
+import Signupp from "./pages/Signupp";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/Address" element={<Address />} />
         <Route path="/signinpage" element={<Signinpage />} />
+        <Route path="/signupp" element={<Signupp />} />
       </Routes>
     </div>
   );

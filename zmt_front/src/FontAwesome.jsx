@@ -8,6 +8,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 // 사용할 아이콘을 라이브러리에 추가
 library.add(
@@ -17,5 +18,6 @@ library.add(
   faMagnifyingGlass,
   faHome,
   faLocationDot,
-  faBell
+  faBell,
+  faArrowLeft
 );

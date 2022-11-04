@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import "../FontAwesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, colors, getRadioUtilityClass, Paper } from "@mui/material";
@@ -15,7 +15,6 @@ export default function BottomNav() {
   const customStyles = {
     overlay: {
       position: "fixed",
-      top: 0,
       left: 0,
       right: 0,
       bottom: 0,
@@ -35,6 +34,51 @@ export default function BottomNav() {
   };
   return (
     <Box>
+      <Paper
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          width: "100vw",
+          borderBottom: 1,
+        }}
+        elevation={3}
+      >
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-evenly"
+          height="7vh"
+          alignItems="center"
+          alignSelf="center"
+        >
+          <Grid xs={2} container justifyContent="space-evenly">
+            <Link to="/Address" className="iconColor">
+              <FontAwesomeIcon icon="location-dot" size="lg" />{" "}
+              {/* 네비게이션을 구성하고 있는 하나의 버튼 */}
+            </Link>
+          </Grid>
+          <Grid
+            xs={8}
+            justifyContent="space-evenly"
+            className="addressMean"
+            style={{ textAlign: "center" }}
+          >
+            <Link to="/Signinpage">
+              <item>
+                <h4>LogIn</h4>
+              </item>
+            </Link>
+          </Grid>
+          <Grid xs={2} container justifyContent="space-evenly">
+            <Link to="/OrderList" className="iconColor">
+              <FontAwesomeIcon icon="bell" size="lg" />{" "}
+            </Link>
+          </Grid>
+        </Grid>
+      </Paper>
+      <Outlet />
       <Paper
         sx={{
           position: "fixed",
@@ -199,51 +243,6 @@ export default function BottomNav() {
                 icon="user"
                 className={activeNav === 5 ? "nav-item active" : "nav-item"}
               />
-            </Link>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      <Paper
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          width: "100vw",
-          borderBottom: 1,
-        }}
-        elevation={3}
-      >
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-evenly"
-          height="7vh"
-          alignItems="center"
-          alignSelf="center"
-        >
-          <Grid xs={2} container justifyContent="space-evenly">
-            <Link to="/Address" className="iconColor">
-              <FontAwesomeIcon icon="location-dot" size="lg" />{" "}
-              {/* 네비게이션을 구성하고 있는 하나의 버튼 */}
-            </Link>
-          </Grid>
-          <Grid
-            xs={8}
-            justifyContent="space-evenly"
-            className="addressMean"
-            style={{ textAlign: "center" }}
-          >
-            <Link to="/Signinpage">
-              <item>
-                <h4>LogIn</h4>
-              </item>
-            </Link>
-          </Grid>
-          <Grid xs={2} container justifyContent="space-evenly">
-            <Link to="/OrderList" className="iconColor">
-              <FontAwesomeIcon icon="bell" size="lg" />{" "}
             </Link>
           </Grid>
         </Grid>
