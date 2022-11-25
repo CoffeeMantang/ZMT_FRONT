@@ -1,0 +1,24 @@
+.box:focus {
+  outline: none;
+  font-family: 'NanumSquareNeo-Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: normal;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2')
+    format('woff2');
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App_logo {
+    animation: App-logo-spin infinite 10s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
