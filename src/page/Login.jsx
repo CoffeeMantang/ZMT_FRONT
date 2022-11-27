@@ -56,12 +56,14 @@ export default function Login(props) {
     };
     try {
       const response = await axios.post(
-        `http://localhost:8080/member/signin`,
+        `http://localhost:8080/nonmember/signin`,
         req
       );
 
       // 성공 시 로컬 스토리지에 토큰 저장
       localStorage.setItem('ACCESS_TOKEN', response.data.token);
+      // 타입도 저장
+      localStorage.setItem('ACCESS_TYPE', response.data.type);
 
       props.setLogin(true);
       // token 출력

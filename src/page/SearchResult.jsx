@@ -14,6 +14,10 @@ import {
   Divider,
   Tabs,
   Tab,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -28,7 +32,7 @@ export default function SearchResult(props) {
   useEffect(() => {
     console.log(`SearchResult.jsx: 로그인 상태는 ${props.isLogin}`);
     setValue(0);
-    setSort('orderCount'); // 기본값 : 주문순
+    setSort(10); // 기본값 : 주문순
     setPage('1');
 
     if (props.isLogin === true) {
@@ -40,19 +44,19 @@ export default function SearchResult(props) {
   }, []);
 
   const [ref, inView] = useInView();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(0); // 정렬
   const [addressX, setAddressX] = useState(0.0);
   const [addressY, setAddressY] = useState(0.0);
   const [address, setAddress] = useState(''); //주소
   const [loading, setLoading] = useState(true);
-  const [kw, setKw] = useState('');
+  const [kw, setKw] = useState(''); // 검색 키워드
 
   const handleSearch = () => {
     history.push(`/searchResult/${kw}`);
     keyword = kw;
     console.log(`SearchResult.jsx: 로그인 상태는 ${props.isLogin}`);
     setValue(0);
-    setSort('orderCount'); // 기본값 : 주문순
+    setSort(10); // 기본값 : 주문순
     setPage('1');
 
     if (props.isLogin === true) {
@@ -76,8 +80,8 @@ export default function SearchResult(props) {
         // GPS를 지원하면
         navigator.geolocation.getCurrentPosition(
           function (position) {
-            setAddressX(position.coords.latitude); // 위도
-            setAddressY(position.coords.longitude); // 경도
+            setAddressX(position.coords.longitude); // 경도
+            setAddressY(position.coords.latitude); // 위도
             console.log(
               position.coords.latitude + ' ' + position.coords.longitude
             );
@@ -94,6 +98,7 @@ export default function SearchResult(props) {
         );
       } else {
         alert('GPS를 지원하지 않습니다');
+        history.push('/login'); // 좌표정보를 받아올수 없는 경우 login 페이지로 이동
       }
     }
   }
@@ -137,7 +142,8 @@ export default function SearchResult(props) {
 
   const [resultList, setResultList] = useState();
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState('orderCount'); // 정렬에 사용할 state
+  const [sort, setSort] = useState(10); // 정렬에 사용할 state
+  let sortType = 'orderCount';
 
   const history = useHistory();
 
@@ -210,12 +216,12 @@ export default function SearchResult(props) {
     try {
       console.log(`${keyword} 가 파라미터 값이예요`);
       const response = await axios.get(
-        `http://localhost:8080/nonmember/searchResult/${keyword}?page=${inputPage}&sort=${sort}&address=${encodeURIComponent(
+        `http://localhost:8080/nonmember/searchResult/${keyword}?page=${inputPage}&sort=${sortType}&address=${encodeURIComponent(
           addr
-        )}`
+        )}&x=${encodeURIComponent(addressX)}&y=${encodeURIComponent(addressY)}`
       );
       console.log(
-        `http://localhost:8080/nonmember/searchResult/${keyword}?page=${inputPage}&sort=${sort}&address=${encodeURIComponent(
+        `http://localhost:8080/nonmember/searchResult/${keyword}?page=${inputPage}&sort=${sortType}&address=${encodeURIComponent(
           addr
         )}`
       );
@@ -251,7 +257,7 @@ export default function SearchResult(props) {
       console.log(`${keyword} 가 파라미터 값이예요`);
       const response = await axios
         .get(
-          `http://localhost:8080/partners/store/searchResult/${keyword}?page=${inputPage}&sort=${sort}`,
+          `http://localhost:8080/partners/store/searchResult/${keyword}?page=${inputPage}&sort=${sortType}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -267,7 +273,7 @@ export default function SearchResult(props) {
           }
         });
       console.log(
-        `http://localhost:8080/store/searchResult/${keyword}?page=${inputPage}&sort=${sort}`
+        `http://localhost:8080/store/searchResult/${keyword}?page=${inputPage}&sort=${sortType}`
       );
       if (inputPage === 1) {
         setResultList(response.data.data);
@@ -301,7 +307,9 @@ export default function SearchResult(props) {
       console.log(`${keyword} 가 파라미터 값이예요`);
       const response = await axios
         .get(
-          `http://localhost:8080/partners/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sort}`,
+          `http://localhost:8080/partners/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sortType}&x=${encodeURIComponent(
+            addressX
+          )}&y=${encodeURIComponent(addressY)}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -317,7 +325,7 @@ export default function SearchResult(props) {
           }
         });
       console.log(
-        `http://localhost:8080/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sort}`
+        `http://localhost:8080/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sortType}`
       );
       if (inputPage === 1) {
         if (response.data.data.length < 1) {
@@ -351,7 +359,7 @@ export default function SearchResult(props) {
       console.log(`${keyword} 가 파라미터 값이예요`);
       const response = await axios
         .get(
-          `http://localhost:8080/partners/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sort}`,
+          `http://localhost:8080/partners/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sortType}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -367,7 +375,7 @@ export default function SearchResult(props) {
           }
         });
       console.log(
-        `http://localhost:8080/partners/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sort}`
+        `http://localhost:8080/partners/store/searchMenuResult/${keyword}?page=${inputPage}&sort=${sortType}`
       );
       if (inputPage === 1) {
         if (response.data.data.length < 1) {
@@ -399,9 +407,54 @@ export default function SearchResult(props) {
   };
 
   // sort state가 변경되면 해당하는 정렬로 재로드(기존 result 제거)
-  useEffect(() => {}, [sort]);
+  useEffect(() => {
+    if (sort === 10) {
+      // 주문순
+      sortType = 'orderCount';
+    } else if (sort === 20) {
+      sortType = 'reviewScore';
+    } else if (sort === 30) {
+      sortType = 'charge';
+    } else if (sort === 40) {
+      sortType = 'distance';
+    }
+  }, [sort]);
 
   // 가게:0 메뉴:1 탭이 변경되면 해당하는 result로 재로드(기존 result 제거)
+  useEffect(() => {
+    setTemp(true);
+    setSort(10); // 정렬도 기본값으로
+    sortType = 'orderCount';
+    if (value === 0) {
+      // 가게명으로 검색인 경우
+      // 1. 새로 검색
+      console.log(`SearchResult.jsx: 로그인 상태는 ${props.isLogin}`);
+      setPage('1');
+      if (props.isLogin === true) {
+        // 로그인 된 경우
+        getResultWithLogin(1);
+      }
+      if (props.isLogin === false) {
+        // 로그인되지 않은 경우
+        getResult(1);
+      }
+    } else if (value === 1) {
+      // 메뉴명으로 검색인 경우
+      console.log(`SearchResult.jsx: 로그인 상태는 ${props.isLogin}`);
+      setLoading(false);
+      setPage('1');
+      if (props.isLogin === true) {
+        // 로그인 된 경우
+        getMenuSearchWithLogin(1);
+      }
+      if (props.isLogin === false) {
+        // 로그인되지 않은 경우
+        getMenuSearch(1);
+      }
+    }
+  }, [value]);
+
+  // 정렬방식이 변경될 때
   useEffect(() => {
     setTemp(true);
     if (value === 0) {
@@ -431,7 +484,7 @@ export default function SearchResult(props) {
         getMenuSearch(1);
       }
     }
-  }, [value]);
+  }, [sort]);
 
   // 무한스크롤
   useEffect(() => {
@@ -493,6 +546,23 @@ export default function SearchResult(props) {
             </Box>
           </Grid>
         </ThemeProvider>
+        <Grid xs="12" justifyContent="left" sx={{ pl: 2 }}>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              onChange={handleSortChange}
+              value={sort}
+            >
+              <MenuItem value={10} selected>
+                주문수
+              </MenuItem>
+              <MenuItem value={20}>리뷰평점</MenuItem>
+              <MenuItem value={30}>배달팁</MenuItem>
+              <MenuItem value={40}>거리</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         {/** 가게로 검색 리스트 */}
         {(value === 0 || value === 1) &&
           resultList !== undefined &&
