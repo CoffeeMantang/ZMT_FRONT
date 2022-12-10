@@ -23,6 +23,7 @@ import Menu from './page/Menu';
 import Basket from './page/Basket';
 import Question from './page/Question';
 import axios from 'axios';
+import Partners from './partners/Partners';
 
 function App() {
   const [isLogin, setLogin] = useState(false); // 로그인 여부 체크용 state
@@ -68,6 +69,9 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
+        { /** 사업자 페이지 */}
+        <Route path="/partners" render={() => <Partners isLogin={isLogin} setLogin={setLogin} />}>
+        </Route>
         <Route path="/login" render={() => <Login isLogin={isLogin} setLogin={setLogin} />} />
         <Route path="/store/:storeId" render={() => <Store isLogin={isLogin} setLogin={setLogin} bottomPage={bottomPage} setBottomPage={setBottomPage} />} />
         <Route path="/address" render={() => <Address isLogin={isLogin} setLogin={setLogin} bottomPage={bottomPage} setBottomPage={setBottomPage} />} />
