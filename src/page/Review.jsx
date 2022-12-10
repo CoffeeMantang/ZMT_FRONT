@@ -58,11 +58,20 @@ export default function Review(props) {
   const getReviewList = async (inputPage) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:8080/nonmember/review?storeId=${encodeURIComponent(
-          storeId
-        )}&page=${inputPage}`
-      );
+      const response = await axios
+        .get(
+          `http://localhost:8080/nonmember/review?storeId=${encodeURIComponent(
+            storeId
+          )}&page=${inputPage}`
+        )
+        .catch((error) => {
+          // 실패 시 status가 403이면 유효하지 않은 token 이므로 로컬스토리지의 토큰 제거하고 로그인상태 false로
+          if (error.status === 403) {
+            //로그인상태를 false로
+            props.setLogin(false);
+            history.push('/main');
+          }
+        });
       console.log(
         `http://localhost:8080/nonmember/review?storeId=${encodeURIComponent(
           storeId
@@ -152,17 +161,19 @@ export default function Review(props) {
                   </Grid>
                 )}
               </Grid>
+              {item.images !== undefined && item.images.length > 0 && (
+                <Grid xs="12" sx={{ mt: 0.5 }}>
+                  <div className={styles.image_box}>
+                    <img
+                      src={`${item.images[0]}`}
+                      alt={item.name}
+                      loading="lazy"
+                      className={styles.image_thumbnail}
+                    />
+                  </div>
+                </Grid>
+              )}
 
-              <Grid xs="12" sx={{ mt: 0.5 }}>
-                <div className={styles.image_box}>
-                  <img
-                    src={`${item.thumb}`}
-                    alt={item.name}
-                    loading="lazy"
-                    className={styles.image_thumbnail}
-                  />
-                </div>
-              </Grid>
               <Grid xs="12" sx={{ mt: 1 }}>
                 <Typography sx={{ fontSize: '10' }}>{item.title}</Typography>
               </Grid>

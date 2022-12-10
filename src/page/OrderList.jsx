@@ -15,6 +15,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StarIcon from '@mui/icons-material/Star';
 import { useInView } from 'react-intersection-observer';
 import styles from '../css/OrderList.module.css';
+import WriteReview from './WriteReview';
 
 export default function OrderList(props) {
   const history = useHistory();
@@ -24,6 +25,9 @@ export default function OrderList(props) {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isGet, setGet] = useState(false);
+  const [review, setReview] = useState(false); // true가되면 리뷰 컴포넌트가 뜸
+  const [storeName, setStoreName] = useState("0"); // 가게이름을 임시로 저장할 state
+  const [orderlistId, setOrderlistId] = useState(""); // 오더리스트 아이디를 임시로 저장할 state
 
   const theme = createTheme({
     typography: {
@@ -60,21 +64,23 @@ export default function OrderList(props) {
       setGet(false);
       try {
         const accessToken = localStorage.getItem('ACCESS_TOKEN');
-        const response = await axios.get(
-          `http://localhost:8080/orderlist/getOrderlist?page=${inputPage}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        ).catch(error => {
-          // 실패 시 status가 403이면 유효하지 않은 token 이므로 로컬스토리지의 토큰 제거하고 로그인상태 false로
-          if (error.status === 403) {
-            //로그인상태를 false로
-            props.setLogin(false);
-            history.push("/main");
-          }
-        });
+        const response = await axios
+          .get(
+            `http://localhost:8080/orderlist/getOrderlist?page=${inputPage}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          )
+          .catch((error) => {
+            // 실패 시 status가 403이면 유효하지 않은 token 이므로 로컬스토리지의 토큰 제거하고 로그인상태 false로
+            if (error.status === 403) {
+              //로그인상태를 false로
+              props.setLogin(false);
+              history.push('/main');
+            }
+          });
         // 가져온 response 저장
         if (inputPage === 0) {
           // 처음 api 호출 시 그대로 저장
@@ -123,7 +129,8 @@ export default function OrderList(props) {
     <ThemeProvider theme={theme}>
       <div style={{ height: '57px' }}></div>
       {/** 주문내역 띄워주기 */}
-      {resultList !== null &&
+      {!review &&
+        resultList !== null &&
         resultList !== undefined &&
         resultList.length > 0 &&
         resultList.map((item) => {
@@ -219,9 +226,24 @@ export default function OrderList(props) {
                         </Grid>
                       );
                     })}
-                  <Grid xs="12" sx={{ mt: 2 }}>
+                  <Grid xs="8" sx={{ mt: 2 }}>
                     <Typography>배달비 : {item.charge}</Typography>
                   </Grid>
+                  {item.canReview === 1 && (
+                    <Grid xs="4" sx={{ mt: 2 }}>
+                      <Typography
+                        color="secondary"
+                        textAlign="right"
+                        onClick={() => {
+                          setOrderlistId(item.orderlistId); // 임시로 orderlistId를 넣음
+                          setStoreName(item.storeName) // 임시로 storeName를 넣음
+                          setReview(true); // 리뷰페이지가 뜨도록 함
+                        }}
+                      >
+                        <b>리뷰쓰기</b>
+                      </Typography>
+                    </Grid>
+                  )}
                   <Grid xs="12" align="center" sx={{ mt: 1 }}>
                     <Typography
                       variant="h6"
@@ -236,6 +258,15 @@ export default function OrderList(props) {
             )
           );
         })}
+      {/** 리뷰작성페이지 */}
+      {review && (
+        <WriteReview
+          login={props.login}
+          setLogin={props.setLogin}
+          orderlistId={orderlistId}
+          storeName={storeName}
+        />
+      )}
       {/** 무한로딩 관리용 div */}
       {resultList && !loading && !inView && (
         <div ref={ref}>
