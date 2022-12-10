@@ -207,6 +207,13 @@ export default function Menu(props) {
             </Typography>
           </Grid>
           <Grid xs="12">
+            <Button
+              onClick={() => history.push(`/partners/addOption/${menu.menuId}`)}
+            >
+              옵션추가
+            </Button>
+          </Grid>
+          <Grid xs="12">
             <Divider />
           </Grid>
           {/** 옵션들 */}
